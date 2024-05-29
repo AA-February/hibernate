@@ -1,0 +1,15 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: hibernate
+  datasource:
+    url: jdbc:mysql://localhost:3306/hibernate?createDatabaseIfNotExist=true
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+  #    password: <your password>
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    format-sql: true
