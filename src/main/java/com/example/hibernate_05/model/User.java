@@ -3,10 +3,9 @@ package com.example.hibernate_05.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -25,11 +24,28 @@ public class User {
     private String email;
     @Column(nullable = false)
     private String password;
+    @OneToOne
+    @JoinColumn(name = "details_id")
+    private CarDetails carDetails;
+
     @OneToMany(mappedBy = "user",
-            cascade = CascadeType.REMOVE,
+            cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
     @JsonManagedReference
-    private Set<Car> cars;
+    private Set<Car> cars = new HashSet<>();
+
+    @OneToMany(mappedBy = "user",
+            fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private Set<Address> addresses = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<UserRole> roles = new HashSet<>();
 
     @Override
     public String toString() {
@@ -39,7 +55,8 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", cars='" + cars + '\'' +
+                ", cars=" + cars +
+                ", addresses=" + addresses +
                 '}';
     }
 }
